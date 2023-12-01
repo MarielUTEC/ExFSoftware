@@ -1,0 +1,46 @@
+Se requiere realizar un cambio en el software para que soporte un valor máximo de 200 soles a transferir por día.
+Qué cambiaría en el código (Clases / Métodos) - No implementación.
+Nuevos casos de prueba a adicionar.
+Cuánto riesgo hay de “romper” lo que ya funciona?
+
+
+
+Primero se me ocurre agregarle un atributo que represente la transferencia maxima diaria a la Clase Cuenta asi:
+
+class Cuenta:
+    MAX_TRANSF_DIARIA = 200  # Nuevo atributo para el límite diario
+
+Luego en la funcion pagar lo agregaria como primera condicional antes de poder realizar la transaccion, asi:
+
+def pagar(self, destino, valor):
+        if valor > self.MAX_TRANSF_DIARIA:
+            return {"mensaje": "La transferencia diaria no puede exceder los 200 soles"}
+
+        if destino in self.contactos:
+            if self.saldo >= valor:
+                self.saldo -= valor
+                operacion = Operacion(destino, valor)
+                self.historial_operaciones.append(operacion)
+                return {"mensaje": "Transacción exitosa", "nuevo_saldo": self.saldo, "fecha": operacion.fecha}
+            else:
+                return {"mensaje": "Saldo insuficiente para realizar la transacción"}
+        else:
+            return {"mensaje": "El destino no está en la lista de contactos"}
+
+Segundo:
+
+Ahora se podrian agregar estos casos de prueba:
+
+Caso de éxito - Transferencia dentro del límite diario:
+Que se intente realizar una transferencia de 150 soles (dentro del límite diario) y verificar que la transacción sea exitosa.
+
+Caso de error - Transferencia fuera del límite diario:
+Intentar realizar una transferencia de 250 soles (superando el límite diario) y verificar que el sistema maneje correctamente este caso, devolviendo un mensaje de error.
+
+Caso de éxito - Múltiples transferencias dentro del límite diario:
+Que se realice varias transferencias dentro del límite diario y verifiquemos que el sistema las maneje correctamente.
+
+
+Tercero:
+
+Creo que el nivel de riesgo es moderado, puesto que estas alteraciones son concretas y siempre y cuando se apliquen con atención y se sometan a pruebas exhaustivas, no se espera que generen impactos adversos en las funciones ya existentes.
